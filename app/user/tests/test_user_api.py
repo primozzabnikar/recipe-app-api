@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 
-CREATE_USER_URL = reverse('user.create')
+CREATE_USER_URL = reverse('user:create')
 
 
 def create_user(**params):
@@ -25,22 +25,21 @@ class PublicUserApiTests(TestCase):
     def test_create_user_success(self):
         """Test creating user is successfull"""
         payload = {
-            'email': 'test@examle.com',
-            'password': 'abv123',
+            'email': 'test@example.com',
+            'password': 'abv123123',
             'name': 'Anemd'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         user = get_user_model().objects.get(email=payload['email'])
-
         self.assertTrue(user.check_password(payload['password']))
         self.assertNotIn('password', res.data)
 
     def test_user_with_email_exists_error(self):
         """Test error returned if user with email exists"""
         payload = {
-            'email': 'test@examle.com',
+            'email': 'test@example.com',
             'password': 'abv123',
             'name': 'Anemd'
         }
@@ -52,7 +51,7 @@ class PublicUserApiTests(TestCase):
     def test_password_too_short_error(self):
         """Test error returned if password less than 5 chars"""
         payload = {
-            'email': 'test@examle.com',
+            'email': 'test@example.com',
             'password': 'ab3',
             'name': 'Anemd'
         }
